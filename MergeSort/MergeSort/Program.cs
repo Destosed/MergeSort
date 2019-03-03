@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MergeSortProj
 {
@@ -10,8 +10,7 @@ namespace MergeSortProj
     {
         static void Main(string[] args)
         {
-            GenerateItems();
-            Console.ReadKey();
+
         }
 
         static int[] MergeSort(int[] array)
@@ -46,18 +45,15 @@ namespace MergeSortProj
 
         static void GenerateItems()
         {
-            const int setsCount = 3;
-            const int itemsCount = 4 ;
-
-            var itemSetArray = new int[setsCount][];
-
-            FillArray(itemSetArray, itemsCount);
-            PrintArray(itemSetArray);
-        }
-
-        static void FillArray(int[][] itemSetArray, int itemsCount)
-        {
             Random rnd = new Random();
+            //int setsCount = rnd.Next(50, 100);
+            //int itemsCount = rnd.Next(100, 10000);
+
+            int setsCount = 5; //Количество наборов
+            int itemsCount = 10; //Количество элементов в наборе
+
+            var itemSetArray = new int[setsCount][];   
+
             for (int i = 0; i < itemSetArray.Length; i++)
             {
                 itemSetArray[i] = new int[itemsCount];
@@ -65,15 +61,16 @@ namespace MergeSortProj
                 for (int j = 0; j < itemSetArray[i].Length; j++)
                     itemSetArray[i][j] = rnd.Next(0, 100);
             }
+            PrintArrayInFile(itemSetArray);
         }
 
-        static void PrintArray(int[] arr)
+        static void PrintArrayInConsole(int[] arr)
         {
             foreach (var item in arr)
                 Console.Write("{0} ", item);
         }
 
-        static void PrintArray(int[][] itemSetArray)
+        static void PrintArrayInConsole(int[][] itemSetArray)
         {
             for (int i = 0; i < itemSetArray.Length; i++)
             {
@@ -81,6 +78,21 @@ namespace MergeSortProj
                     Console.Write("{0} ", itemSetArray[i][j]);
 
                 Console.WriteLine();
+            }
+        }
+
+        static void PrintArrayInFile(int[][] itemsSets)
+        {
+            var sb = new StringBuilder();
+            File.WriteAllText("RandomItemsSet.txt", string.Empty); //Очищение файла перед использованием
+
+            foreach (var itemSet in itemsSets)
+            {
+                foreach (var item in itemSet)
+                    sb.Append(item.ToString() + " ");
+                using (StreamWriter w = File.AppendText("RandomItemsSet.txt"))
+                    w.WriteLine(sb.ToString() + " ");
+                sb.Clear();
             }
         }
     }
