@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,12 +12,35 @@ namespace MergeSortProj
 
         static void Main(string[] args)
         {
-            GenerateAndPrintItems(1, 100);
-            SortLinesInFile("RandomItemsSet.txt");
+            Random random = new Random();
+            var sb = new StringBuilder();
+            //GenerateAndPrintItems(10);
+            //SortLinesInFile("RandomItemsSet.txt");
+
+            for (int i = 1; i <= 50; i++)
+            {
+                counter = 0;
+                var itemsCount = random.Next(10000);
+                Stopwatch stopwatch = new Stopwatch();
+
+                stopwatch.Start();
+                MergeSort(TestMethods.GenerateOneSet(itemsCount));
+                stopwatch.Stop();
+
+                //Console.WriteLine("Количество входных данных: " + itemsCount);
+                //Console.WriteLine("Количество итераций: " + counter);
+                //Console.WriteLine("Количество тиков: " + stopwatch.Elapsed.Ticks); 
+                //Console.WriteLine();
+
+                sb.AppendFormat("{0} {1} {2}", itemsCount, counter, stopwatch.Elapsed.Ticks);
+
+                File.WriteAllText("RandomItemsSet.txt", sb.ToString());
+            }
+
             Console.ReadKey();
         }
 
-        static int[] MergeSort(int[] array)
+        public static int[] MergeSort(int[] array)
         {
             if (array.Length == 1)
                 return array;
@@ -25,7 +49,7 @@ namespace MergeSortProj
             return finalSortedArr;
         }
 
-        static int[] Merge(int[] arr1, int[] arr2)
+        public static int[] Merge(int[] arr1, int[] arr2)
         {
             int ptr1 = 0, ptr2 = 0;
             int[] merged = new int[arr1.Length + arr2.Length];
@@ -41,14 +65,14 @@ namespace MergeSortProj
             return merged;
         }
 
-        static SingleLinkedList MergeSort(SingleLinkedList lst)
+        public static SingleLinkedList MergeSort(SingleLinkedList lst)
         {
             var sortedArr = MergeSort(lst.ToIntArray());
             var sortedLst = lst.FillFromArray(sortedArr);
             return sortedLst;
         }
 
-        static void GenerateAndPrintItems(int setsCount, int itemsCount)
+        public static void GenerateAndPrintItems(int setsCount) //int itemsCount
         {
             //setsCount - Количество наборов
             //itemsCount - Количество элементов в наборе
@@ -58,7 +82,7 @@ namespace MergeSortProj
 
             for (int i = 0; i < itemSetArray.Length; i++)
             {
-                itemSetArray[i] = new int[itemsCount];
+                itemSetArray[i] = new int[i + 1];
 
                 for (int j = 0; j < itemSetArray[i].Length; j++)
                     itemSetArray[i][j] = rnd.Next(0, 100);
@@ -66,13 +90,13 @@ namespace MergeSortProj
             PrintArrayInFile(itemSetArray);
         }
 
-        static void PrintArrayInConsole(int[] arr)
+        public static void PrintArrayInConsole(int[] arr)
         {
             foreach (var item in arr)
                 Console.Write("{0} ", item);
         }
 
-        static void PrintArrayInConsole(int[][] itemSetArray)
+        public static void PrintArrayInConsole(int[][] itemSetArray)
         {
             for (int i = 0; i < itemSetArray.Length; i++)
             {
@@ -83,7 +107,7 @@ namespace MergeSortProj
             }
         }
 
-        static void PrintArrayInFile(int[][] itemsSets)
+        public static void PrintArrayInFile(int[][] itemsSets)
         {
             var sb = new StringBuilder();
             File.WriteAllText("RandomItemsSet.txt", string.Empty); //Очищение файла перед использованием
@@ -104,7 +128,7 @@ namespace MergeSortProj
             }
         }
 
-        static string ConvertIntArrToString(int[] arr)
+        public static string ConvertIntArrToString(int[] arr)
         {
             var sb = new StringBuilder();
             for (int i = 0; i < arr.Length; i++)
@@ -117,7 +141,7 @@ namespace MergeSortProj
             return sb.ToString();
         }
 
-        static int[] ConvertStringArrToIntArr(string[] arr)
+        public static int[] ConvertStringArrToIntArr(string[] arr)
         {
             var intArr = new int[arr.Length];
             for (int i = 0; i < arr.Length; i++)
@@ -125,7 +149,7 @@ namespace MergeSortProj
             return intArr;
         }
 
-        static void SortLinesInFile(string path)
+        public static void SortLinesInFile(string path)
         {
             var lines = File.ReadAllLines(path);
             var sortedLines = new string[lines.Length];
